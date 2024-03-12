@@ -67,10 +67,10 @@
       let messageObject = new Object();
       oldWidth = newWidth;
       oldHeight= newHeight;
+      messageObject.name = "resize";
       messageObject.width = newWidth;
       messageObject.height = newHeight;
       messageObject.clientNum = clientNum;
-      messageObject.name = "resize";
       let messageString = JSON.stringify(messageObject);
       socket.emit('chat message', messageString);
     }
