@@ -1,3 +1,4 @@
+// Socket.io tutorial revised by @andru1d to show JSON messaging
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -13,10 +14,11 @@ app.get('/', (req, res) => {
 //app.get('/', (req, res) => {
 //  res.send('<h1>Hello world</h1>');
 //});
+// keep track of which client we are.
 let clientNum = 0;
 
 io.on('connection', (socket) => { 
-  let me = clientNum++;
+ let me = clientNum++;
  console.log('Client ' + me + ' connected.');
  io.emit('init', me);
 });
