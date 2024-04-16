@@ -32,7 +32,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   // Socket.io tutorial revised by @andru1d to show JSON messaging
-  
+
   let socket = io();
 
   let form = document.getElementById('form');
@@ -40,6 +40,7 @@
   let messages = document.getElementById('messages');
 
   let clientNum = -1;
+  let clientId;
 
   form.addEventListener('submit', function(e) 
   {
@@ -65,6 +66,7 @@
 
     // avoid sending the same message twice in a row!
     if ((newWidth != oldWidth) && (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
+    // if (true)
     {
       let messageObject = new Object();
       oldWidth = newWidth;
@@ -73,6 +75,7 @@
       messageObject.width = newWidth;
       messageObject.height = newHeight;
       messageObject.clientNum = clientNum;
+      messageObject.id        = clientId;
       let messageString = JSON.stringify(messageObject);
       socket.emit('chat message', messageString);
     }
@@ -85,15 +88,16 @@
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   });
-  socket.on('init', function(who)
+  socket.on('init', function(which, thatId)
   {
     // display the client number in the upper right hand corner
     if (clientNum == -1)
     {
-      clientNum = who;
-      // alert("Connected! " + who);
-      document.getElementById("client_num").textContent = "client " + who;
-      document.title += " " + who;
+      clientNum = which;
+      alert("Connected! " + which + " " + thatId);
+      clientId = thatId;
+      document.getElementById("client_num").textContent = "client " + which;
+      document.title += " " + which;
     }
   });
 </script>

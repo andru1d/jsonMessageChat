@@ -20,7 +20,7 @@ let clientNum = 0;
 io.on('connection', (socket) => { 
  let me = clientNum++;
  console.log('Client ' + me + ' connected.');
- io.emit('init', me);
+ io.emit('init', me, socket.id);
 });
 
 io.on('connection', (socket) => 
