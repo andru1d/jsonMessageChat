@@ -48,6 +48,7 @@
       e.preventDefault();
       if (input.value) // defensive programming
       {
+          // build a chat message and send it to socketServer (which sends to all clients)
           let messageObject = new Object();
           messageObject.name = "chat_message";
           messageObject.msg  = input.value;
@@ -67,6 +68,7 @@
       if ((newWidth != oldWidth) && (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
       // if (true)
       {
+        // build a resize message and send it to socketServer (which sends to all clients)
         let messageObject = new Object();
         oldWidth = newWidth;
         oldHeight= newHeight;
@@ -82,6 +84,9 @@
     };
     socket.on('chat message', (msg) =>
     {
+      // handle socket message
+      // create list element with the message and append to list in the document
+      //TODO add reall message handling code here
       let item = document.createElement('li');
       item.textContent = msg;
       messages.appendChild(item);

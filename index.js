@@ -2,9 +2,9 @@
 const express = require('express');
 const app = express();
 const http = require('http');
-const server = http.createServer(app);
+const nodeServer = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const socketServer = new Server(nodeServer);
 
 // express route to index.html
 app.get('/', (req, res) => {
@@ -18,27 +18,29 @@ app.get('/', (req, res) => {
 let clientNum = 0;
 
 // when a client (web browser) connects, send it an init message with clientNum, then bump that
-io.on('connection', (socket) => 
+socketServer.on('connection', (socket) => 
   { 
     let me = clientNum++;
     console.log('Client ' + me + ' connected.');
-    io.emit('init', me, socket.id);
+    socketServer.emit('init', me, socket.id);
   }
 );
 
 // set up chat message event handler
-io.on('connection', (socket) => 
+// pass messages from one client to all the clients
+socketServer.on('connection', (socket) => 
 {
     socket.on('chat message', (msg) => 
       {
         console.log('message: ' + msg);
-        io.emit('chat message', msg);
+        //TODO add server side functionality here
+        socketServer.emit('chat message', msg);
     });
   }
 );
 
 const socketNum = 4000;
-server.listen(socketNum, () => 
+nodeServer.listen(socketNum, () => 
   {
     console.log('listening on *:'+socketNum);
   }
