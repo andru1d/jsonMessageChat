@@ -23,83 +23,90 @@
         padding-right: 5pt;
       }
     </style>
-  </head>
-  <body>
-    <span id="client_num">X</span><ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
   // Socket.io tutorial revised by @andru1d to show JSON messaging
 
   let socket = io();
 
-  let form = document.getElementById('form');
-  let input = document.getElementById('input');
-  let messages = document.getElementById('messages');
+
+  let messages; // = document.getElementById('messages');
 
   let clientNum = -1;
   let clientId;
 
-  form.addEventListener('submit', function(e) 
-  {
-    e.preventDefault();
-    if (input.value) // defensive programming
-    {
-        let messageObject = new Object();
-        messageObject.name = "chat_message";
-        messageObject.msg  = input.value;
-        messageObject.clientNum = clientNum;
-        let messageString = JSON.stringify(messageObject);
-        input.value = '';
-        socket.emit('chat message', messageString);
-    }
-  });
   let oldWidth = -1;
   let oldHeight = -1;
 
-  window.onresize = (event) =>
+  function setupEventHandlers()
   {
-    let newWidth = window.innerWidth;
-    let newHeight = window.innerHeight;
-
-    // avoid sending the same message twice in a row!
-    if ((newWidth != oldWidth) && (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
-    // if (true)
+    let form = document.getElementById('form');
+    let input = document.getElementById('input');
+    messages = document.getElementById('messages');
+    form.addEventListener('submit', function(e) 
     {
-      let messageObject = new Object();
-      oldWidth = newWidth;
-      oldHeight= newHeight;
-      messageObject.name = "resize";
-      messageObject.width = newWidth;
-      messageObject.height = newHeight;
-      messageObject.clientNum = clientNum;
-      messageObject.id        = clientId;
-      let messageString = JSON.stringify(messageObject);
-      socket.emit('chat message', messageString);
-    }
+      e.preventDefault();
+      if (input.value) // defensive programming
+      {
+          let messageObject = new Object();
+          messageObject.name = "chat_message";
+          messageObject.msg  = input.value;
+          messageObject.clientNum = clientNum;
+          let messageString = JSON.stringify(messageObject);
+          input.value = '';
+          socket.emit('chat message', messageString);
+      }
+    });
 
-  };
-  socket.on('chat message', function(msg) 
-  {
-    let item = document.createElement('li');
-    item.textContent = msg;
-    messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
-  });
-  socket.on('init', function(which, thatId)
-  {
-    // display the client number in the upper right hand corner
-    if (clientNum == -1)
+    window.onresize = (event) =>
     {
-      clientNum = which;
-      alert("Connected! " + which + " " + thatId);
-      clientId = thatId;
-      document.getElementById("client_num").textContent = "client " + which;
-      document.title += " " + which;
-    }
-  });
+      let newWidth = window.innerWidth;
+      let newHeight = window.innerHeight;
+
+      // avoid sending the same message twice in a row!
+      if ((newWidth != oldWidth) && (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
+      // if (true)
+      {
+        let messageObject = new Object();
+        oldWidth = newWidth;
+        oldHeight= newHeight;
+        messageObject.name = "resize";
+        messageObject.width = newWidth;
+        messageObject.height = newHeight;
+        messageObject.clientNum = clientNum;
+        messageObject.id        = clientId;
+        let messageString = JSON.stringify(messageObject);
+        socket.emit('chat message', messageString);
+      }
+
+    };
+    socket.on('chat message', (msg) =>
+    {
+      let item = document.createElement('li');
+      item.textContent = msg;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+    socket.on('init', (which, thatId) =>
+    {
+      // display the client number in the upper right hand corner
+      if (clientNum == -1)
+      {
+        clientNum = which;
+        alert("Connected! " + which + " " + thatId);
+        clientId = thatId;
+        document.getElementById("client_num").textContent = "client " + which;
+        document.title += " " + which;
+      }
+    });
+  }
 </script>
+</head>
+
+<body onload="setupEventHandlers()">
+  <span id="client_num">X</span><ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="input" autocomplete="off" /><button>Send</button>
+  </form>
 </body>
 </html>
