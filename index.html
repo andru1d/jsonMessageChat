@@ -66,7 +66,7 @@
       let newHeight = window.innerHeight;
 
       // avoid sending the same message twice in a row!
-      if ((newWidth != oldWidth) && (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
+      if ((newWidth != oldWidth) || (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
       // if (true)
       {
         // build a resize message and send it to socketServer (which sends to all clients)
