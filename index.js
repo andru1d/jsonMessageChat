@@ -21,7 +21,7 @@ let clientNum = 0;
 socketServer.on('connection', (socket) => 
   { 
     let me = clientNum++;
-    console.log('Client ' + me + ' connected.');
+    console.log(`Client ${me} connected.`);
     // send init message right away for new connection
     socketServer.emit('init', me, socket.id);
 
@@ -29,7 +29,7 @@ socketServer.on('connection', (socket) =>
     // pass messages from one client to all the clients
     socket.on('chat', (msg) => 
       {
-        console.log('chat: ' + msg);
+        console.log(`chat(${msg})`);
         //TODO add server side functionality here
         socketServer.emit('chat', msg); // send to all clients
       });
