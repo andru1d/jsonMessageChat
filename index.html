@@ -27,35 +27,36 @@
 <script>
   // Socket.io tutorial revised by @andru1d to show JSON messaging
 
-  let socket = io();
-
-
-  let messages; // = document.getElementById('messages');
-
-  let clientNum = -1;
-  let clientId;
-
-  let oldWidth = -1;
-  let oldHeight = -1;
+  const CHAT = "chat";
 
   function setupEventHandlers()
   {
+    let socket = io();
+
+    let clientNum = -1;
+    let clientId;
+
+    let oldWidth = -1;
+    let oldHeight = -1;
+
     let form = document.getElementById('form');
     let input = document.getElementById('input');
-    messages = document.getElementById('messages');
-    form.addEventListener('submit', function(e) 
+    let messages = document.getElementById('messages');
+
+    form.addEventListener('submit', (e) =>
     {
       e.preventDefault();
       if (input.value) // defensive programming
       {
           // build a chat message and send it to socketServer (which sends to all clients)
           let messageObject = new Object();
-          messageObject.name = "chat_message";
+          messageObject.name = CHAT;
           messageObject.msg  = input.value;
           messageObject.clientNum = clientNum;
+          messageObject.id        = clientId;
           let messageString = JSON.stringify(messageObject);
           input.value = '';
-          socket.emit('chat message', messageString);
+          socket.emit(CHAT, messageString);
       }
     });
 
@@ -78,11 +79,11 @@
         messageObject.clientNum = clientNum;
         messageObject.id        = clientId;
         let messageString = JSON.stringify(messageObject);
-        socket.emit('chat message', messageString);
+        socket.emit(CHAT, messageString);
       }
 
     };
-    socket.on('chat message', (msg) =>
+    socket.on(CHAT, (msg) =>
     {
       // handle socket message
       // create list element with the message and append to list in the document
