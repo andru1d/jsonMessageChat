@@ -5,10 +5,14 @@ const http = require('http');
 const nodeServer = http.createServer(app);
 const { Server } = require("socket.io");
 const socketServer = new Server(nodeServer);
+const path = require('path');
+
+//app.use('/includes', express.static(path.join(__dirname, 'includes')));
+app.use(express.static(__dirname)); // set express path for static content to be our directory
 
 // express route to index.html
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname, 'index.html')); // use path.join for platform independence
 });
 
 //app.get('/', (req, res) => {
