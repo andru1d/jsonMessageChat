@@ -4,99 +4,36 @@
     <title>JSON Message Client</title>
     <link rel="stylesheet" href="includes/messageChat.css">
     <style>
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(odd) { background: #efefef; }
+#messages_ul
+{ 
+  list-style-type: none; 
+  margin: 0; 
+  padding: 0; 
+}
+#messages_ul > li
+{ padding: 0.5rem 1rem; }
+     
+#messages_ul > li:nth-child(odd) 
+{ background: #efefef; }
 
     </style>
 <script src="/socket.io/socket.io.js"></script>
+<script src="includes/clientServer.js"></script>
+<script src="includes/setupEventHandlers.js"></script>
 <script>
   // Socket.io tutorial revised by @andru1d to show JSON messaging
 
-  const CHAT = "chat";
-
-  function setupEventHandlers()
+  function buildListElement(msg)
   {
-    let socket = io();
-
-    let clientNum = -1;
-    let clientId;
-
-    let oldWidth = -1;
-    let oldHeight = -1;
-
-    let form = document.getElementById('form');
-    let input = document.getElementById('input');
-    let messages = document.getElementById('messages');
-
-    form.addEventListener('submit', (e) =>
-    {
-      e.preventDefault();
-      if (input.value) // defensive programming
-      {
-          // build a chat message and send it to socketServer (which sends to all clients)
-          let messageObject = new Object();
-          messageObject.name = CHAT;
-          messageObject.msg  = input.value;
-          messageObject.clientNum = clientNum;
-          messageObject.id        = clientId;
-          let messageString = JSON.stringify(messageObject);
-          input.value = '';
-          socket.emit(CHAT, messageString);
-      }
-    });
-
-    window.onresize = (event) =>
-    {
-      let newWidth = window.innerWidth;
-      let newHeight = window.innerHeight;
-
-      // avoid sending the same message twice in a row!
-      if ((newWidth != oldWidth) || (newHeight != oldHeight)) // should really be or but it's so verbose anyway :)
-      // if (true)
-      {
-        // build a resize message and send it to socketServer (which sends to all clients)
-        let messageObject = new Object();
-        oldWidth = newWidth;
-        oldHeight= newHeight;
-        messageObject.name = "resize";
-        messageObject.width = newWidth;
-        messageObject.height = newHeight;
-        messageObject.clientNum = clientNum;
-        messageObject.id        = clientId;
-        let messageString = JSON.stringify(messageObject);
-        socket.emit(CHAT, messageString);
-      }
-
-    };
-    socket.on(CHAT, (msg) =>
-    {
-      // handle socket message
-      // create list element with the message and append to list in the document
-      //TODO add reall message handling code here
-      let item = document.createElement('li');
-      item.textContent = msg;
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
-    });
-    socket.on('init', (which, thatId) =>
-    {
-      // display the client number in the upper right hand corner
-      if (clientNum == -1)
-      {
-        clientNum = which;
-        alert("Connected! " + which + " " + thatId);
-        clientId = thatId;
-        document.getElementById("client_num").textContent = "client " + which;
-        document.title += " " + which;
-      }
-    });
+      let messageElement = document.createElement('li');
+      messageElement.textContent = msg;
+      return messageElement;
   }
 </script>
 </head>
 
-<body onload="setupEventHandlers()">
-  <span id="client_num">X</span><ul id="messages"></ul>
+<body onload="setupEventHandlers('messages_ul', buildListElement)">
+  <span id="client_num">X</span><ul id="messages_ul"></ul>
   <form id="form" action="">
     <input id="input" autocomplete="off" /><button>Send</button>
   </form>

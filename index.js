@@ -6,14 +6,22 @@ const nodeServer = http.createServer(app);
 const { Server } = require("socket.io");
 const socketServer = new Server(nodeServer);
 const path = require('path');
+const fs = require('fs');
+const clientServer = require(path.join(__dirname, 'includes/clientServer.js'));
+//import {INIT} from path.join(__dirname, 'includes/clientServer.mjs');
 
 //app.use('/includes', express.static(path.join(__dirname, 'includes')));
 app.use(express.static(__dirname)); // set express path for static content to be our directory
 
 // express route to index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html')); // use path.join for platform independence
+app.get('/flexChat.html', (req, res) => {
+  res.sendFile('./flexChat.html'); // use path.join for platform independence
+//  res.sendFile(path.join(__dirname, 'flexChat.html')); // use path.join for platform independence
 });
+
+
+//eval('var INIT = "init";');
+//eval(fs.readFileSync('./includes/clientServer.js').toString());
 
 //app.get('/', (req, res) => {
 //  res.send('<h1>Hello world</h1>');
@@ -27,7 +35,7 @@ socketServer.on('connection', (socket) =>
     let me = clientNum++;
     console.log(`Socket.io Client ${me} connected.`);
     // send init message right away for new connection
-    socketServer.emit('init', me, socket.id);
+    socketServer.emit(clientServer.INIT, me, socket.id);
 
     // setup chat message handler for latest connection
     // pass messages from one client to all the clients
@@ -35,7 +43,7 @@ socketServer.on('connection', (socket) =>
       {
         console.log(`Socket.io.chat(${msg})`);
         //TODO add server side functionality here
-        socketServer.emit('chat', msg); // send to all clients
+        socketServer.emit(clientServer.CHAT, msg); // send to all clients
       });
   }
 );
