@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>flex chat</title>
+    <title>Flex Message Client</title>
     <link rel="stylesheet" href="includes/messageChat.css">
     <style>
         
@@ -17,7 +17,7 @@
 .flex_card
 {
     width: 250pt;
-    border: 1px solid #bbbbbb;
+    border: 1px solid #cccccc;
     margin: 15pt 15pt 0pt 0pt;
     display: block;
     position: relative;
@@ -70,15 +70,13 @@ tr, td
       }
       return messageElement;
   }
+  // {"name":"chat","msg":"One is fun","clientNum":1,"id":"4z0LdxW3hb39iJcOAAAD"}
 </script>
 </head>
 
-<!--
-{"name":"chat","msg":"One is fun","clientNum":1,"id":"4z0LdxW3hb39iJcOAAAD"}
--->
 <body onload="setupEventHandlers('messages_flex_container',buildFlexElement)">
 <span id="client_num">X</span><div id="messages_flex_container"></div>
   <form id="form" action="">
-    <input id="input" autocomplete="off" /><button>Send</button>
+    <input id="input" autocomplete="off" /><button>Send</button><a target="_blank" href="index.html"><button type="button">Spawn<br/>JSON</button></a>
   </form>
 </body>

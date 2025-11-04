@@ -7,25 +7,10 @@ const { Server } = require("socket.io");
 const socketServer = new Server(nodeServer);
 const path = require('path');
 const fs = require('fs');
-const clientServer = require(path.join(__dirname, 'includes/clientServer.js'));
-//import {INIT} from path.join(__dirname, 'includes/clientServer.mjs');
+const clientServer = require(path.join(__dirname, 'public/includes/clientServer.js'));
 
-//app.use('/includes', express.static(path.join(__dirname, 'includes')));
-app.use(express.static(__dirname)); // set express path for static content to be our directory
+app.use(express.static(path.join(__dirname, 'public'))); // set express path for static content to be our directory
 
-// express route to index.html
-app.get('/flexChat.html', (req, res) => {
-  res.sendFile('./flexChat.html'); // use path.join for platform independence
-//  res.sendFile(path.join(__dirname, 'flexChat.html')); // use path.join for platform independence
-});
-
-
-//eval('var INIT = "init";');
-//eval(fs.readFileSync('./includes/clientServer.js').toString());
-
-//app.get('/', (req, res) => {
-//  res.send('<h1>Hello world</h1>');
-//});
 // keep track of which client we are.
 let clientNum = 0;
 

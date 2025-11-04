@@ -27,7 +27,7 @@
       { 
         outline: none; 
       }
-      #form > button 
+      button 
       { 
         background: #333; 
         border: none; 
@@ -39,9 +39,13 @@
       }
       #client_num
       {
-        float: right; 
+        position: fixed;
+        top: 0; right: 0;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-weight: bold;
-        padding-top: 5pt;
-        padding-right: 5pt;
+        background-color: white;
+        padding: 5pt;
+        z-index: 2;
       }
+
+      
